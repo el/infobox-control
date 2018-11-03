@@ -1,4 +1,4 @@
-# Mapbox GL JS Style Switcher
+# Mapbox GL JS Infobox
 
 Adds an infobox and/or gradient switch to `mapbox-gl`
 

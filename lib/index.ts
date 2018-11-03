@@ -1,24 +1,33 @@
 import { IControl, Map as MapboxMap } from "mapbox-gl";
 import { GeoJsonProperties } from "geojson";
 
+
+export interface IMapboxInfoBoxOptions
+{
+    layerId?: string,
+    formatter?: (properties: GeoJsonProperties) => string
+}
+
 export class MapboxInfoBoxControl implements IControl
 {
+    private static readonly DEFAULT_OPTIONS: IMapboxInfoBoxOptions = {
+        layerId: "features",
+        formatter: properties => properties ? `Name: ${properties['name']}` : ''
+    }
     private controlContainer: HTMLElement;
     private formatter: (properties: GeoJsonProperties) => string;
     private layerId: string;
 
-    constructor(
-        layerId: string = "features",
-        formatter: (properties: GeoJsonProperties) => string = properties => properties ? `Name: ${properties['name']}` : ''
-    )
+    constructor( options: IMapboxInfoBoxOptions = MapboxInfoBoxControl.DEFAULT_OPTIONS)
     {
         this.controlContainer = document.createElement("div");
         this.controlContainer.classList.add("mapboxgl-ctrl");
         this.controlContainer.classList.add("mapboxgl-ctrl-group");
         this.controlContainer.classList.add("mapboxgl-ctrl-icon");
         this.controlContainer.classList.add("mapboxgl-info-box-ctrl");
-        this.formatter = formatter;
-        this.layerId = layerId;
+        const controlOptions = Object.assign({}, MapboxInfoBoxControl.DEFAULT_OPTIONS, options);
+        this.formatter = controlOptions.formatter!;
+        this.layerId = controlOptions.layerId!;
     }
 
     public getDefaultPosition(): string
@@ -64,8 +73,20 @@ export interface IMapboxGradientSteps
     maxValue: number
 }
 
+export interface IMapboxGradientBoxOptions
+{
+    layerId?: string,
+    gradientSteps?: IMapboxGradientSteps,
+    getWeight?: (properties: GeoJsonProperties) => number
+}
+
 export class MapboxGradientBoxControl implements IControl
 {
+    private static readonly DEFAULT_OPTIONS: IMapboxGradientBoxOptions = {
+        layerId: "features",
+        gradientSteps: {minValue: 0, maxValue: 100},
+        getWeight: (properties) => (properties ? properties.weight : 0)
+    };
     private controlContainer: HTMLElement;
     private leftValueElement: HTMLElement;
     private gradientElement: HTMLElement;
@@ -75,12 +96,9 @@ export class MapboxGradientBoxControl implements IControl
     private getWeight: (properties: GeoJsonProperties) => number;
     private layerId: string;
 
-    constructor(
-        layerId: string = "features",
-        gradientSteps: IMapboxGradientSteps = {minValue: 0, maxValue: 100},
-        getWeight: (properties: GeoJsonProperties) => number = (properties) => (properties ? properties.weight : 0)
-    )
+    constructor( options: IMapboxGradientBoxOptions = MapboxGradientBoxControl.DEFAULT_OPTIONS)
     {
+        const controlOptions = Object.assign({}, MapboxGradientBoxControl.DEFAULT_OPTIONS, options);
         this.controlContainer = document.createElement("div");
         this.controlContainer.classList.add("mapboxgl-ctrl");
         this.controlContainer.classList.add("mapboxgl-ctrl-group");
@@ -88,7 +106,7 @@ export class MapboxGradientBoxControl implements IControl
 
         this.leftValueElement = document.createElement("div");
         this.leftValueElement.classList.add("left-value");
-        this.leftValueElement.innerText = `${gradientSteps.minValue}`;
+        this.leftValueElement.innerText = `${controlOptions.gradientSteps!.minValue}`;
         this.controlContainer.appendChild(this.leftValueElement);
         
         this.gradientElement = document.createElement("div");
@@ -102,12 +120,12 @@ export class MapboxGradientBoxControl implements IControl
         
         this.rightValueElement = document.createElement("div");
         this.rightValueElement.classList.add("right-value");
-        this.rightValueElement.innerText = `${gradientSteps.maxValue}`;
+        this.rightValueElement.innerText = `${controlOptions.gradientSteps!.maxValue}`;
         this.controlContainer.appendChild(this.rightValueElement);
         
-        this.getWeight = getWeight;
-        this.layerId = layerId;
-        this.gradientSteps = gradientSteps;
+        this.getWeight = controlOptions.getWeight!;
+        this.layerId = controlOptions.layerId!;
+        this.gradientSteps = controlOptions.gradientSteps!;
     }
 
     public getDefaultPosition(): string

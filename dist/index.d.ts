@@ -1,10 +1,15 @@
 import { IControl, Map as MapboxMap } from "mapbox-gl";
 import { GeoJsonProperties } from "geojson";
+export interface IMapboxInfoBoxOptions {
+    layerId?: string;
+    formatter?: (properties: GeoJsonProperties) => string;
+}
 export declare class MapboxInfoBoxControl implements IControl {
+    private static readonly DEFAULT_OPTIONS;
     private controlContainer;
     private formatter;
     private layerId;
-    constructor(layerId?: string, formatter?: (properties: GeoJsonProperties) => string);
+    constructor(options?: IMapboxInfoBoxOptions);
     getDefaultPosition(): string;
     onAdd(map: MapboxMap): HTMLElement;
     onRemove(): void;
@@ -13,7 +18,13 @@ export interface IMapboxGradientSteps {
     minValue: number;
     maxValue: number;
 }
+export interface IMapboxGradientBoxOptions {
+    layerId?: string;
+    gradientSteps?: IMapboxGradientSteps;
+    getWeight?: (properties: GeoJsonProperties) => number;
+}
 export declare class MapboxGradientBoxControl implements IControl {
+    private static readonly DEFAULT_OPTIONS;
     private controlContainer;
     private leftValueElement;
     private gradientElement;
@@ -22,7 +33,7 @@ export declare class MapboxGradientBoxControl implements IControl {
     private gradientSteps;
     private getWeight;
     private layerId;
-    constructor(layerId?: string, gradientSteps?: IMapboxGradientSteps, getWeight?: (properties: GeoJsonProperties) => number);
+    constructor(options?: IMapboxGradientBoxOptions);
     getDefaultPosition(): string;
     onAdd(map: MapboxMap): HTMLElement;
     onRemove(): void;

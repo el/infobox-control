@@ -28,21 +28,19 @@ You can also supply your own options.
 const layerId = "features";
 const minMaxValues = {minValue: 0, maxValue: 100};
 const weightGetter = properties => properties ? properties['weight'] : 0;
-map.addControl(
-    new MapboxGradientBoxControl(
-        layerId, 
-        minMaxValues, 
-        weightGetter
-    )
-);
+const gradientOptions: MapboxGradientBoxOptions = {
+    layerId,
+    minMaxValues,
+    weightGetter
+};
+map.addControl(new MapboxGradientBoxControl(gradientOptions));
 
 const formatter = properties => properties ? `<b>Name:</b> ${properties['name']}` : '';
-map.addControl(
-    new MapboxInfoBoxControl(
-        layerId,
-        formatter
-    )
-);
+const infoboxOptions: MapboxInfoBoxOptions = {
+    layerId,
+    formatter
+};
+map.addControl(new MapboxInfoBoxControl(infoboxOptions));
 ```
 
 ## Screenshots

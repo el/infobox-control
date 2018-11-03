@@ -1,6 +1,6 @@
 {
   "name": "mapbox-gl-infobox",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Mapbox GL JS Infobox",
   "main": "dist/index.js",
   "types" : "dist/index.d.ts",

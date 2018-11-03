@@ -22,21 +22,25 @@ map.addControl(new MapboxInfoBoxControl());
 ```
 
 ## Options:
-If you want to supply your own list of styles, pass them in the constructor.
+IfYou can also supply your own options.
 
 ```ts
 const layerId = "features";
+const minMaxValues = {minValue: 0, maxValue: 100};
+const weightGetter = properties => properties ? properties['weight'] : 0;
 map.addControl(
     new MapboxGradientBoxControl(
         layerId, 
-        {minValue: 0, maxValue: 100}, 
-        properties => properties ? properties['weight'] : 0
+        minMaxValues, 
+        weightGetter
     )
 );
+
+const formatter = properties => properties ? `<b>Name:</b> ${properties['name']}` : '';
 map.addControl(
     new MapboxInfoBoxControl(
         layerId,
-        properties => properties ? `<b>Name:</b> ${properties['name']}` : ''
+        formatter
     )
 );
 ```

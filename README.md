@@ -22,7 +22,7 @@ map.addControl(new MapboxInfoBoxControl());
 ```
 
 ## Options:
-IfYou can also supply your own options.
+You can also supply your own options.
 
 ```ts
 const layerId = "features";

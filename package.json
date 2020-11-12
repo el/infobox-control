@@ -1,9 +1,9 @@
 {
   "name": "mapbox-gl-infobox",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Mapbox GL JS Infobox",
   "main": "dist/index.js",
-  "types" : "dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"

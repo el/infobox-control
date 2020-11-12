@@ -75,14 +75,16 @@ export interface IMapboxGradientSteps
 
 export interface IMapboxGradientBoxOptions
 {
-    layerId?: string,
+    formatter?: (value: number) => string,
     gradientSteps?: IMapboxGradientSteps,
-    getWeight?: (properties: GeoJsonProperties) => number
+    getWeight?: (properties: GeoJsonProperties) => number,
+    layerId?: string
 }
 
 export class MapboxGradientBoxControl implements IControl
 {
     private static readonly DEFAULT_OPTIONS: IMapboxGradientBoxOptions = {
+        formatter: value => String(value),
         layerId: "features",
         gradientSteps: {minValue: 0, maxValue: 100},
         getWeight: (properties) => (properties ? properties.weight : 0)
@@ -99,6 +101,7 @@ export class MapboxGradientBoxControl implements IControl
     constructor( options: IMapboxGradientBoxOptions = MapboxGradientBoxControl.DEFAULT_OPTIONS)
     {
         const controlOptions = Object.assign({}, MapboxGradientBoxControl.DEFAULT_OPTIONS, options);
+        const formatter = options.formatter || (value => String(value));
         this.controlContainer = document.createElement("div");
         this.controlContainer.classList.add("mapboxgl-ctrl");
         this.controlContainer.classList.add("mapboxgl-ctrl-group");
@@ -106,7 +109,7 @@ export class MapboxGradientBoxControl implements IControl
 
         this.leftValueElement = document.createElement("div");
         this.leftValueElement.classList.add("left-value");
-        this.leftValueElement.innerText = `${controlOptions.gradientSteps!.minValue}`;
+        this.leftValueElement.innerText = formatter(controlOptions.gradientSteps!.minValue);
         this.controlContainer.appendChild(this.leftValueElement);
         
         this.gradientElement = document.createElement("div");
@@ -120,7 +123,7 @@ export class MapboxGradientBoxControl implements IControl
         
         this.rightValueElement = document.createElement("div");
         this.rightValueElement.classList.add("right-value");
-        this.rightValueElement.innerText = `${controlOptions.gradientSteps!.maxValue}`;
+        this.rightValueElement.innerText = formatter(controlOptions.gradientSteps!.maxValue);
         this.controlContainer.appendChild(this.rightValueElement);
         
         this.getWeight = controlOptions.getWeight!;

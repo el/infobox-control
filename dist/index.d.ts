@@ -19,9 +19,10 @@ export interface IMapboxGradientSteps {
     maxValue: number;
 }
 export interface IMapboxGradientBoxOptions {
-    layerId?: string;
+    formatter?: (value: number) => string;
     gradientSteps?: IMapboxGradientSteps;
     getWeight?: (properties: GeoJsonProperties) => number;
+    layerId?: string;
 }
 export declare class MapboxGradientBoxControl implements IControl {
     private static readonly DEFAULT_OPTIONS;

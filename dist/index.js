@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MapboxGradientBoxControl = exports.MapboxInfoBoxControl = void 0;
 class MapboxInfoBoxControl {
     constructor(options = MapboxInfoBoxControl.DEFAULT_OPTIONS) {
         this.controlContainer = document.createElement("div");
@@ -37,21 +38,22 @@ class MapboxInfoBoxControl {
         return;
     }
 }
+exports.MapboxInfoBoxControl = MapboxInfoBoxControl;
 MapboxInfoBoxControl.DEFAULT_OPTIONS = {
     layerId: "features",
     formatter: properties => properties ? `Name: ${properties['name']}` : ''
 };
-exports.MapboxInfoBoxControl = MapboxInfoBoxControl;
 class MapboxGradientBoxControl {
     constructor(options = MapboxGradientBoxControl.DEFAULT_OPTIONS) {
         const controlOptions = Object.assign({}, MapboxGradientBoxControl.DEFAULT_OPTIONS, options);
+        const formatter = options.formatter || (value => String(value));
         this.controlContainer = document.createElement("div");
         this.controlContainer.classList.add("mapboxgl-ctrl");
         this.controlContainer.classList.add("mapboxgl-ctrl-group");
         this.controlContainer.classList.add("mapboxgl-gradient-box-ctrl");
         this.leftValueElement = document.createElement("div");
         this.leftValueElement.classList.add("left-value");
-        this.leftValueElement.innerText = `${controlOptions.gradientSteps.minValue}`;
+        this.leftValueElement.innerText = formatter(controlOptions.gradientSteps.minValue);
         this.controlContainer.appendChild(this.leftValueElement);
         this.gradientElement = document.createElement("div");
         this.gradientElement.classList.add("gradient");
@@ -62,7 +64,7 @@ class MapboxGradientBoxControl {
         this.gradientElement.appendChild(this.caretElement);
         this.rightValueElement = document.createElement("div");
         this.rightValueElement.classList.add("right-value");
-        this.rightValueElement.innerText = `${controlOptions.gradientSteps.maxValue}`;
+        this.rightValueElement.innerText = formatter(controlOptions.gradientSteps.maxValue);
         this.controlContainer.appendChild(this.rightValueElement);
         this.getWeight = controlOptions.getWeight;
         this.layerId = controlOptions.layerId;
@@ -97,10 +99,11 @@ class MapboxGradientBoxControl {
         return;
     }
 }
+exports.MapboxGradientBoxControl = MapboxGradientBoxControl;
 MapboxGradientBoxControl.DEFAULT_OPTIONS = {
+    formatter: value => String(value),
     layerId: "features",
     gradientSteps: { minValue: 0, maxValue: 100 },
     getWeight: (properties) => (properties ? properties.weight : 0)
 };
-exports.MapboxGradientBoxControl = MapboxGradientBoxControl;
 //# sourceMappingURL=index.js.map

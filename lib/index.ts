@@ -17,8 +17,9 @@ export class MapboxInfoBoxControl implements IControl
     private controlContainer: HTMLElement;
     private formatter: (properties: GeoJsonProperties) => string;
     private layerId: string;
+    private map?: MapboxMap;
 
-    constructor( options: IMapboxInfoBoxOptions = MapboxInfoBoxControl.DEFAULT_OPTIONS)
+    constructor(options: IMapboxInfoBoxOptions = MapboxInfoBoxControl.DEFAULT_OPTIONS)
     {
         this.controlContainer = document.createElement("div");
         this.controlContainer.classList.add("mapboxgl-ctrl");
@@ -28,42 +29,66 @@ export class MapboxInfoBoxControl implements IControl
         const controlOptions = Object.assign({}, MapboxInfoBoxControl.DEFAULT_OPTIONS, options);
         this.formatter = controlOptions.formatter!;
         this.layerId = controlOptions.layerId!;
+        this.handleMouseEnter = this.handleMouseEnter.bind(this);
+        this.handleMouseLeave = this.handleMouseLeave.bind(this);
+        this.handleMouseMove = this.handleMouseMove.bind(this);
     }
 
     public getDefaultPosition(): string
     {
         return "top-left";
     }
+
     public onAdd(map: MapboxMap): HTMLElement
     {
+        this.map = map;
         this.controlContainer.style.display = "none";
-        map.on("mouseenter", this.layerId, () =>
-        {
-            map.getCanvas().style.cursor = "pointer";
-        });
-
-        map.on("mousemove", this.layerId, (e) =>
-        {
-            if (!e.features || !e.features.length)
-            {
-                return;
-            }
-            const [feature] = e.features;
-            this.controlContainer.style.display = "block";
-            this.controlContainer.innerHTML = this.formatter(feature.properties);
-        });
-
-        map.on("mouseleave", this.layerId, () =>
-        {
-            map.getCanvas().style.cursor = "";
-            this.controlContainer.style.display = "none";
-        });  
+        map.on("mouseenter", this.layerId, this.handleMouseEnter);
+        map.on("mouseleave", this.layerId, this.handleMouseLeave);  
+        map.on("mousemove", this.layerId, this.handleMouseMove);
         return this.controlContainer;
     }
 
     public onRemove(): void
     {
-        return;
+        if (!this.controlContainer || !this.controlContainer.parentNode || !this.map)
+        {
+            return;
+        }
+        this.controlContainer.parentNode.removeChild(this.controlContainer);
+        this.map.off("mouseenter", this.layerId, this.handleMouseEnter);
+        this.map.off("mouseleave", this.layerId, this.handleMouseLeave);  
+        this.map.off("mousemove", this.layerId, this.handleMouseMove);
+    }
+
+    private handleMouseEnter(): void
+    {
+        if (!this.map)
+        {
+            return;
+        }
+        this.map.getCanvas().style.cursor = "pointer";
+    }
+
+    private handleMouseLeave(): void
+    {
+        if (!this.map || !this.controlContainer)
+        {
+            return;
+        }
+        this.map.getCanvas().style.cursor = "";
+        this.controlContainer.style.display = "none";
+    }
+
+    private handleMouseMove(e): void
+    {
+        if (!e.features || !e.features.length)
+        {
+            return;
+        }
+        const [feature] = e.features;
+        this.controlContainer.style.display = "block";
+        this.controlContainer.innerHTML = this.formatter(feature.properties);
     }
 }
 
@@ -97,6 +122,7 @@ export class MapboxGradientBoxControl implements IControl
     private gradientSteps: IMapboxGradientSteps;
     private getWeight: (properties: GeoJsonProperties) => number;
     private layerId: string;
+    private map?: MapboxMap;
 
     constructor( options: IMapboxGradientBoxOptions = MapboxGradientBoxControl.DEFAULT_OPTIONS)
     {
@@ -129,6 +155,10 @@ export class MapboxGradientBoxControl implements IControl
         this.getWeight = controlOptions.getWeight!;
         this.layerId = controlOptions.layerId!;
         this.gradientSteps = controlOptions.gradientSteps!;
+
+        this.handleMouseEnter = this.handleMouseEnter.bind(this);
+        this.handleMouseLeave = this.handleMouseLeave.bind(this);
+        this.handleMouseMove = this.handleMouseMove.bind(this);
     }
 
     public getDefaultPosition(): string
@@ -137,37 +167,56 @@ export class MapboxGradientBoxControl implements IControl
     }
     public onAdd(map: MapboxMap): HTMLElement
     {
-
-        map.on("mouseenter", this.layerId, () =>
-        {
-            map.getCanvas().style.cursor = "pointer";
-        });
-
-        map.on("mousemove", this.layerId, (e) =>
-        {
-            if (!e.features || !e.features.length)
-            {
-                return;
-            }
-            const [feature] = e.features;
-            const weight = this.getWeight(feature.properties);
-            const delta = this.gradientSteps.maxValue - this.gradientSteps.minValue;
-            let percentage = (weight - this.gradientSteps.minValue) / delta * 100;
-            percentage = percentage > 100 ? 100 : (percentage < 0 ? 0 : percentage);
-            this.caretElement.style.paddingLeft = `${percentage}%`;
-            this.caretElement.style.display = "inline";
-        });
-
-        map.on("mouseleave", this.layerId, () =>
-        {
-            map.getCanvas().style.cursor = "";
-            this.caretElement.style.display = "none";
-        });  
+        this.map = map;
+        map.on("mouseenter", this.layerId, this.handleMouseEnter);
+        map.on("mouseleave", this.layerId, this.handleMouseLeave);  
+        map.on("mousemove", this.layerId, this.handleMouseMove);
         return this.controlContainer;
     }
 
     public onRemove(): void
     {
-        return;
+        if (!this.controlContainer || !this.controlContainer.parentNode || !this.map)
+        {
+            return;
+        }
+        this.controlContainer.parentNode.removeChild(this.controlContainer);
+        this.map.off("mouseenter", this.layerId, this.handleMouseEnter);
+        this.map.off("mouseleave", this.layerId, this.handleMouseLeave);  
+        this.map.off("mousemove", this.layerId, this.handleMouseMove);
+    }
+
+    private handleMouseEnter(): void
+    {
+        if (!this.map)
+        {
+            return;
+        }
+        this.map.getCanvas().style.cursor = "pointer";
+    }
+
+    private handleMouseLeave(): void
+    {
+        if (!this.map || !this.controlContainer)
+        {
+            return;
+        }
+        this.map.getCanvas().style.cursor = "";
+        this.controlContainer.style.display = "none";
+    }
+
+    private handleMouseMove(e): void
+    {
+        if (!e.features || !e.features.length)
+        {
+            return;
+        }
+        const [feature] = e.features;
+        const weight = this.getWeight(feature.properties);
+        const delta = this.gradientSteps.maxValue - this.gradientSteps.minValue;
+        let percentage = (weight - this.gradientSteps.minValue) / delta * 100;
+        percentage = percentage > 100 ? 100 : (percentage < 0 ? 0 : percentage);
+        this.caretElement.style.paddingLeft = `${percentage}%`;
+        this.caretElement.style.display = "inline";
     }
 }

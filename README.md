@@ -2,6 +2,9 @@
 
 Adds an infobox and/or gradient switch to `mapbox-gl`
 
+![](https://img.shields.io/bundlephobia/min/mapbox-gl-infobox) <a href="https://www.npmjs.com/package/mapbox-gl-infobox">![](https://img.shields.io/npm/v/mapbox-gl-infobox)</a> ![](https://img.shields.io/npm/types/mapbox-gl-infobox) ![](https://img.shields.io/npm/l/mapbox-gl-infobox) 
+
+
 ## Installation:
 
 ```bash

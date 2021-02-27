@@ -9,10 +9,14 @@ export declare class MapboxInfoBoxControl implements IControl {
     private controlContainer;
     private formatter;
     private layerId;
+    private map?;
     constructor(options?: IMapboxInfoBoxOptions);
     getDefaultPosition(): string;
     onAdd(map: MapboxMap): HTMLElement;
     onRemove(): void;
+    private handleMouseEnter;
+    private handleMouseLeave;
+    private handleMouseMove;
 }
 export interface IMapboxGradientSteps {
     minValue: number;
@@ -34,8 +38,12 @@ export declare class MapboxGradientBoxControl implements IControl {
     private gradientSteps;
     private getWeight;
     private layerId;
+    private map?;
     constructor(options?: IMapboxGradientBoxOptions);
     getDefaultPosition(): string;
     onAdd(map: MapboxMap): HTMLElement;
     onRemove(): void;
+    private handleMouseEnter;
+    private handleMouseLeave;
+    private handleMouseMove;
 }

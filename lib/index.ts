@@ -6,6 +6,20 @@ export interface IMapboxInfoBoxOptions
 {
     layerId?: string,
     formatter?: (properties: GeoJsonProperties) => string
+    /**
+     * These classes will be added to the container `<div>`.
+     *
+     * Classes must not be passed as a space-delimited string,
+     * instead use an array fo strings.
+     * 
+     * @example ```ts
+     * 'cl1 cl2' // This will fail
+     * ```
+     * @example ```ts
+     * ['cl1', 'cl2'] // This will work
+     * ```
+     */
+    additionalContainerClasses?: string | string[]
 }
 
 export class MapboxInfoBoxControl implements IControl
@@ -21,11 +35,7 @@ export class MapboxInfoBoxControl implements IControl
 
     constructor(options: IMapboxInfoBoxOptions = MapboxInfoBoxControl.DEFAULT_OPTIONS)
     {
-        this.controlContainer = document.createElement("div");
-        this.controlContainer.classList.add("mapboxgl-ctrl");
-        this.controlContainer.classList.add("mapboxgl-ctrl-group");
-        this.controlContainer.classList.add("mapboxgl-ctrl-icon");
-        this.controlContainer.classList.add("mapboxgl-info-box-ctrl");
+        this.createContainer(options);
         const controlOptions = Object.assign({}, MapboxInfoBoxControl.DEFAULT_OPTIONS, options);
         this.formatter = controlOptions.formatter!;
         this.layerId = controlOptions.layerId!;
@@ -59,6 +69,21 @@ export class MapboxInfoBoxControl implements IControl
         this.map.off("mouseenter", this.layerId, this.handleMouseEnter);
         this.map.off("mouseleave", this.layerId, this.handleMouseLeave);  
         this.map.off("mousemove", this.layerId, this.handleMouseMove);
+    }
+
+    private createContainer(options: IMapboxInfoBoxOptions) {
+        this.controlContainer = document.createElement("div");
+        this.controlContainer.classList.add("mapboxgl-ctrl");
+        this.controlContainer.classList.add("mapboxgl-ctrl-group");
+        this.controlContainer.classList.add("mapboxgl-ctrl-icon");
+        this.controlContainer.classList.add("mapboxgl-info-box-ctrl");
+
+        if (options.additionalContainerClasses?.length) {
+            const classes = Array.isArray(options.additionalContainerClasses) ? options.additionalContainerClasses : [options.additionalContainerClasses];
+            for (const className of classes) {
+                this.controlContainer.classList.add(className);
+            }
+        }
     }
 
     private handleMouseEnter(): void

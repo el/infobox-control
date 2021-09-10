@@ -39,10 +39,8 @@ class MapboxInfoBoxControl {
         this.controlContainer.classList.add("mapboxgl-ctrl-icon");
         this.controlContainer.classList.add("mapboxgl-info-box-ctrl");
         if ((_a = options.additionalContainerClasses) === null || _a === void 0 ? void 0 : _a.length) {
-            const classes = Array.isArray(options.additionalContainerClasses) ? options.additionalContainerClasses : [options.additionalContainerClasses];
-            for (const className of classes) {
-                this.controlContainer.classList.add(className);
-            }
+            const classes = Array.isArray(options.additionalContainerClasses) ? options.additionalContainerClasses : options.additionalContainerClasses.split(" ");
+            this.controlContainer.classList.add(...classes);
         }
     }
     handleMouseEnter() {

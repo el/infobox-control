@@ -3,11 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MapboxGradientBoxControl = exports.MapboxInfoBoxControl = void 0;
 class MapboxInfoBoxControl {
     constructor(options = MapboxInfoBoxControl.DEFAULT_OPTIONS) {
-        this.controlContainer = document.createElement("div");
-        this.controlContainer.classList.add("mapboxgl-ctrl");
-        this.controlContainer.classList.add("mapboxgl-ctrl-group");
-        this.controlContainer.classList.add("mapboxgl-ctrl-icon");
-        this.controlContainer.classList.add("mapboxgl-info-box-ctrl");
+        this.createContainer(options);
         const controlOptions = Object.assign({}, MapboxInfoBoxControl.DEFAULT_OPTIONS, options);
         this.formatter = controlOptions.formatter;
         this.layerId = controlOptions.layerId;
@@ -34,6 +30,18 @@ class MapboxInfoBoxControl {
         this.map.off("mouseenter", this.layerId, this.handleMouseEnter);
         this.map.off("mouseleave", this.layerId, this.handleMouseLeave);
         this.map.off("mousemove", this.layerId, this.handleMouseMove);
+    }
+    createContainer(options) {
+        var _a;
+        this.controlContainer = document.createElement("div");
+        this.controlContainer.classList.add("mapboxgl-ctrl");
+        this.controlContainer.classList.add("mapboxgl-ctrl-group");
+        this.controlContainer.classList.add("mapboxgl-ctrl-icon");
+        this.controlContainer.classList.add("mapboxgl-info-box-ctrl");
+        if ((_a = options.additionalContainerClasses) === null || _a === void 0 ? void 0 : _a.length) {
+            const classes = Array.isArray(options.additionalContainerClasses) ? options.additionalContainerClasses : options.additionalContainerClasses.split(" ");
+            this.controlContainer.classList.add(...classes);
+        }
     }
     handleMouseEnter() {
         if (!this.map) {

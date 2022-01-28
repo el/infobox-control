@@ -48,6 +48,7 @@ class MapboxInfoBoxControl {
             return;
         }
         this.map.getCanvas().style.cursor = "pointer";
+        this.controlContainer.style.display = "block";
     }
     handleMouseLeave() {
         if (!this.map || !this.controlContainer) {
@@ -61,7 +62,6 @@ class MapboxInfoBoxControl {
             return;
         }
         const [feature] = e.features;
-        this.controlContainer.style.display = "block";
         this.controlContainer.innerHTML = this.formatter(feature.properties);
     }
 }
@@ -124,13 +124,14 @@ class MapboxGradientBoxControl {
             return;
         }
         this.map.getCanvas().style.cursor = "pointer";
+        this.caretElement.style.display = "block";
     }
     handleMouseLeave() {
         if (!this.map || !this.controlContainer) {
             return;
         }
         this.map.getCanvas().style.cursor = "";
-        this.controlContainer.style.display = "none";
+        this.caretElement.style.display = "none";
     }
     handleMouseMove(e) {
         if (!e.features || !e.features.length) {

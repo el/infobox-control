@@ -41,7 +41,7 @@ export class MapboxInfoBoxControl implements IControl
         this.map = map;
         this.controlContainer.style.display = "none";
         map.on("mouseenter", this.layerId, this.handleMouseEnter);
-        map.on("mouseleave", this.layerId, this.handleMouseLeave);  
+        map.on("mouseleave", this.layerId, this.handleMouseLeave);
         map.on("mousemove", this.layerId, this.handleMouseMove);
         return this.controlContainer;
     }
@@ -54,7 +54,7 @@ export class MapboxInfoBoxControl implements IControl
         }
         this.controlContainer.parentNode.removeChild(this.controlContainer);
         this.map.off("mouseenter", this.layerId, this.handleMouseEnter);
-        this.map.off("mouseleave", this.layerId, this.handleMouseLeave);  
+        this.map.off("mouseleave", this.layerId, this.handleMouseLeave);
         this.map.off("mousemove", this.layerId, this.handleMouseMove);
     }
 
@@ -79,6 +79,7 @@ export class MapboxInfoBoxControl implements IControl
             return;
         }
         this.map.getCanvas().style.cursor = "pointer";
+        this.controlContainer.style.display = "block";
     }
 
     private handleMouseLeave(): void
@@ -98,7 +99,6 @@ export class MapboxInfoBoxControl implements IControl
             return;
         }
         const [feature] = e.features;
-        this.controlContainer.style.display = "block";
         this.controlContainer.innerHTML = this.formatter(feature.properties);
     }
 }
@@ -148,21 +148,21 @@ export class MapboxGradientBoxControl implements IControl
         this.leftValueElement.classList.add("left-value");
         this.leftValueElement.innerText = formatter(controlOptions.gradientSteps!.minValue);
         this.controlContainer.appendChild(this.leftValueElement);
-        
+
         this.gradientElement = document.createElement("div");
         this.gradientElement.classList.add("gradient");
         this.controlContainer.appendChild(this.gradientElement);
-        
+
         this.caretElement = document.createElement("div");
         this.caretElement.classList.add("caret");
         this.caretElement.innerText = "◆";
         this.gradientElement.appendChild(this.caretElement);
-        
+
         this.rightValueElement = document.createElement("div");
         this.rightValueElement.classList.add("right-value");
         this.rightValueElement.innerText = formatter(controlOptions.gradientSteps!.maxValue);
         this.controlContainer.appendChild(this.rightValueElement);
-        
+
         this.getWeight = controlOptions.getWeight!;
         this.layerId = controlOptions.layerId!;
         this.gradientSteps = controlOptions.gradientSteps!;
@@ -180,7 +180,7 @@ export class MapboxGradientBoxControl implements IControl
     {
         this.map = map;
         map.on("mouseenter", this.layerId, this.handleMouseEnter);
-        map.on("mouseleave", this.layerId, this.handleMouseLeave);  
+        map.on("mouseleave", this.layerId, this.handleMouseLeave);
         map.on("mousemove", this.layerId, this.handleMouseMove);
         return this.controlContainer;
     }
@@ -193,7 +193,7 @@ export class MapboxGradientBoxControl implements IControl
         }
         this.controlContainer.parentNode.removeChild(this.controlContainer);
         this.map.off("mouseenter", this.layerId, this.handleMouseEnter);
-        this.map.off("mouseleave", this.layerId, this.handleMouseLeave);  
+        this.map.off("mouseleave", this.layerId, this.handleMouseLeave);
         this.map.off("mousemove", this.layerId, this.handleMouseMove);
     }
 
@@ -204,6 +204,7 @@ export class MapboxGradientBoxControl implements IControl
             return;
         }
         this.map.getCanvas().style.cursor = "pointer";
+        this.caretElement.style.display = "block";
     }
 
     private handleMouseLeave(): void
@@ -213,7 +214,7 @@ export class MapboxGradientBoxControl implements IControl
             return;
         }
         this.map.getCanvas().style.cursor = "";
-        this.controlContainer.style.display = "none";
+        this.caretElement.style.display = "none";
     }
 
     private handleMouseMove(e): void
